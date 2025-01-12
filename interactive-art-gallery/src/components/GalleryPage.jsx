@@ -7,8 +7,11 @@ function GalleryPage() {
   const artworks = useGalleryStore((state) => state.artworks);
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">Gallery</h1>
+    // Added px-4 for horizontal padding and kept py-10 for vertical spacing
+    <div className="container mx-auto py-10 px-4">
+      {/* Center the main heading with text-center */}
+      <h1 className="text-3xl font-bold mb-6 text-center">Gallery</h1>
+      {/* The grid has gap-6 for spacing between cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {artworks.length > 0 ? (
           artworks.map((artwork) => (
