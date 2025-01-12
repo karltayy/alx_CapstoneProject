@@ -6,6 +6,9 @@ function UploadPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
+  
+  // New local state to show a success notification
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,16 +18,36 @@ function UploadPage() {
       description,
       image,
     };
+
+    // Upload the artwork
     addArtwork(newArtwork);
+
+    // Show success notification
+    setShowSuccessMessage(true);
+
+    // Reset the form fields
     setTitle("");
     setDescription("");
     setImage("");
+
+    // Optionally hide the message after a timeout (e.g., 3 seconds)
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center">Upload Artwork</h1>
+
+        {/* Success Message */}
+        {showSuccessMessage && (
+          <div className="mb-4 p-3 bg-green-500 text-white rounded text-center">
+            Artwork uploaded successfully!
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-1">Title</label>

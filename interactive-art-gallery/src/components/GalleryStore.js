@@ -1,17 +1,31 @@
 import { create } from "zustand";
 
-const useGalleryStore = create((set) => ({
+const useGalleryStore = create((set, get) => ({
   artworks: JSON.parse(localStorage.getItem("artworks")) || [],
   favorites: JSON.parse(localStorage.getItem("favorites")) || [],
   user: JSON.parse(localStorage.getItem("user")) || null,
 
-  // Add a new artwork to the global artwork list
-  addArtwork: (artwork) =>
+  // Add a new artwork to the global artwork list, including uploader info and timestamp
+  addArtwork: (artwork) => {
+    const { user } = get();
+
+    // Determine who is uploading the artwork and the time of upload
+    const uploaderName = user?.name || "Unknown"; 
+    const uploadTime = new Date().toLocaleString();
+
+    // Attach uploader details to the incoming artwork object
+    const artworkWithDetails = {
+      ...artwork,
+      uploadedBy: uploaderName,
+      uploadedAt: uploadTime,
+    };
+
     set((state) => {
-      const updatedArtworks = [...state.artworks, artwork];
+      const updatedArtworks = [...state.artworks, artworkWithDetails];
       localStorage.setItem("artworks", JSON.stringify(updatedArtworks));
       return { artworks: updatedArtworks };
-    }),
+    });
+  },
 
   // Add an artwork to favorites if not already in favorites
   addFavorite: (artwork) =>
@@ -37,7 +51,9 @@ const useGalleryStore = create((set) => ({
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
     // Fetch a random profile picture (DiceBear in this case)
-    const response = await fetch(`https://avatars.dicebear.com/api/identicon/${userData.email}.svg`);
+    const response = await fetch(
+      `https://avatars.dicebear.com/api/identicon/${userData.email}.svg`
+    );
     const profilePicture = response.url;
 
     const newUser = { ...userData, profilePicture };
