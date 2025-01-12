@@ -5,6 +5,9 @@ import HomePage from "./components/HomePage";
 import GalleryPage from "./components/GalleryPage";
 import UploadPage from "./components/UploadPage";
 import FavoritesPage from "./components/FavoritesPage";
+import SignIn from "./components/SignIn";
+import Register from "./components/Register";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   return (
@@ -15,6 +18,10 @@ function App() {
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/favorites" element={<FavoritesPage />} />
+         {/* Other Routes */}
+  <Route path="/signin" element={<SignIn />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );
