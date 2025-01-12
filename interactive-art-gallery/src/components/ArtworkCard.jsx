@@ -2,16 +2,10 @@ import React, { useState } from "react";
 import useGalleryStore from "./GalleryStore";
 
 function ArtworkCard({ artwork }) {
-  // Get the entire favorites dictionary
-  const favorites = useGalleryStore((state) => state.favorites);
-  const addFavorite = useGalleryStore((state) => state.addFavorite);
-  const removeFavorite = useGalleryStore((state) => state.removeFavorite);
-
-  // Artwork is a favorite if it exists in the dictionary
+  const { addFavorite, removeFavorite } = useGalleryStore();
   const isFavorite = useGalleryStore((state) =>
     state.favorites.some((fav) => fav.id === artwork.id)
   );
-  
 
   // Fullscreen overlay state
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -26,9 +20,10 @@ function ArtworkCard({ artwork }) {
     }
   };
 
+  // Toggle fullscreen overlay
   const openFullscreen = () => {
     setIsFullscreen(true);
-    setIsZoomed(false);
+    setIsZoomed(false); // Reset zoom whenever we open the overlay
   };
 
   const closeFullscreen = () => {
@@ -36,22 +31,38 @@ function ArtworkCard({ artwork }) {
     setIsZoomed(false);
   };
 
+  // Toggle zoom in/out
   const toggleZoom = () => {
     setIsZoomed((prev) => !prev);
   };
 
   return (
     <>
-      <div className="bg-white rounded shadow p-4 transform transition-transform duration-200 hover:scale-105">
+      <div
+        className="
+          bg-white rounded shadow p-4
+          transform transition-transform duration-200 hover:scale-105
+        "
+      >
+        {/* Clickable image for fullscreen */}
         <img
           src={artwork.image}
           alt={artwork.title}
           className="w-full h-48 object-cover rounded cursor-pointer"
           onClick={openFullscreen}
         />
+
+        {/* Title & Description */}
         <h3 className="mt-2 font-bold text-lg">{artwork.title}</h3>
         <p className="text-gray-600">{artwork.description}</p>
 
+        {/* Uploader & Timestamp on the card, directly below the description */}
+        <p className="text-sm text-gray-500 mt-2">
+          <strong>Uploaded by:</strong> {artwork.uploadedBy || "Unknown"} <br />
+          <strong>Uploaded at:</strong> {artwork.uploadedAt || "N/A"}
+        </p>
+
+        {/* Favorite Button */}
         <button
           onClick={handleFavoriteClick}
           className={`mt-4 py-1 px-4 rounded text-white ${
@@ -64,15 +75,24 @@ function ArtworkCard({ artwork }) {
 
       {/* Fullscreen Overlay */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+        <div
+          className="
+            fixed inset-0 z-50 flex items-center justify-center
+            bg-black bg-opacity-80
+          "
+        >
+          {/* Clickable area for zooming */}
           <img
             src={artwork.image}
             alt={artwork.title}
             onClick={toggleZoom}
-            className={`max-h-full max-w-full object-contain transition-transform duration-300 ${
-              isZoomed ? "scale-125" : ""
-            }`}
+            className={`
+              max-h-full max-w-full object-contain
+              transition-transform duration-300
+              ${isZoomed ? "scale-125" : ""}
+            `}
           />
+          {/* Close Button */}
           <button
             onClick={closeFullscreen}
             className="absolute top-5 right-5 text-white text-3xl focus:outline-none"

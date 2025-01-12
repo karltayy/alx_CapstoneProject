@@ -1,7 +1,8 @@
-
 import { create } from "zustand";
 
-localStorage.removeItem("favorites");
+// Removed the forced 'localStorage.removeItem("favorites");' from here
+// so that favorites are not reset on every page load.
+
 const useGalleryStore = create((set, get) => ({
   artworks: JSON.parse(localStorage.getItem("artworks")) || [],
   favorites: JSON.parse(localStorage.getItem("favorites")) || [],
@@ -12,7 +13,7 @@ const useGalleryStore = create((set, get) => ({
     const { user } = get();
 
     // Determine who is uploading the artwork and the time of upload
-    const uploaderName = user?.name || "Unknown"; 
+    const uploaderName = user?.name || "Unknown";
     const uploadTime = new Date().toLocaleString();
 
     // Attach uploader details to the incoming artwork object
@@ -106,7 +107,6 @@ const useGalleryStore = create((set, get) => ({
       localStorage.setItem("user", JSON.stringify(updatedUser));
       return { user: updatedUser };
     }),
-    
 }));
 
 export default useGalleryStore;
