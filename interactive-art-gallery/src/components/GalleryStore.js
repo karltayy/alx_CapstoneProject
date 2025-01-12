@@ -1,5 +1,7 @@
+
 import { create } from "zustand";
 
+localStorage.removeItem("favorites");
 const useGalleryStore = create((set, get) => ({
   artworks: JSON.parse(localStorage.getItem("artworks")) || [],
   favorites: JSON.parse(localStorage.getItem("favorites")) || [],
@@ -104,6 +106,7 @@ const useGalleryStore = create((set, get) => ({
       localStorage.setItem("user", JSON.stringify(updatedUser));
       return { user: updatedUser };
     }),
+    
 }));
 
 export default useGalleryStore;
