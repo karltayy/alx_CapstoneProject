@@ -1,8 +1,5 @@
 import { create } from "zustand";
 
-// Removed the forced 'localStorage.removeItem("favorites");' from here
-// so that favorites are not reset on every page load.
-
 const useGalleryStore = create((set, get) => ({
   artworks: JSON.parse(localStorage.getItem("artworks")) || [],
   favorites: JSON.parse(localStorage.getItem("favorites")) || [],
@@ -11,12 +8,9 @@ const useGalleryStore = create((set, get) => ({
   // Add a new artwork to the global artwork list, including uploader info and timestamp
   addArtwork: (artwork) => {
     const { user } = get();
-
-    // Determine who is uploading the artwork and the time of upload
     const uploaderName = user?.name || "Unknown";
     const uploadTime = new Date().toLocaleString();
 
-    // Attach uploader details to the incoming artwork object
     const artworkWithDetails = {
       ...artwork,
       uploadedBy: uploaderName,
@@ -49,17 +43,20 @@ const useGalleryStore = create((set, get) => ({
       return { favorites: updatedFavorites };
     }),
 
-  // Register a new user; store user info (including generated profile picture) in localStorage
+  // Register a new user; store user info (including a default profile picture) in localStorage
   registerUser: async (userData) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // Fetch a random profile picture (DiceBear in this case)
-    const response = await fetch(
-      `https://avatars.dicebear.com/api/identicon/${userData.email}.svg`
-    );
-    const profilePicture = response.url;
+    // Assign a static default profile picture
+    const profilePicture = "https://via.placeholder.com/150?text=Avatar";
 
-    const newUser = { ...userData, profilePicture };
+    // Create the new user object
+    const newUser = {
+      ...userData,
+      profilePicture,
+    };
+
+    // Add the new user to the list and save to localStorage
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
   },
